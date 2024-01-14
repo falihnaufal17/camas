@@ -1,0 +1,67 @@
+.text-primary {
+  color: #2ABAF7 !important;
+}
+
+.bg-primary {
+  background-color: #2ABAF7 !important;
+}
+
+.btn-primary {
+  background-color: #2ABAF7;
+  border-color: #2ABAF7;
+}
+
+.btn-primary:hover {
+  border-color: #2ABAF7 !important;
+}
+
+.btn-outline-primary {
+  border-color: #2ABAF7;
+  color: #2ABAF7;
+}
+
+.btn.btn-outline-primary:hover{
+  background-color: #2ABAF7;
+  border-color: #2ABAF7;
+}
+
+.badge-primary {
+  background-color: #2ABAF7;
+}
+
+a {
+  color: #2ABAF7;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #2ABAF7;
+}
+
+.nav-link {
+  color: #2ABAF7;
+}
+
+.border-primary {
+  border-color: #2ABAF7 !important;
+}
+
+main {
+  position: relative;
+  margin-bottom: 100px;
+}
+
+.btn-check:checked+.btn {
+  border-color: #2ABAF7 !important;
+  background-color: #2ABAF7 !important;
+}
+
+.btn-check+.btn:hover {
+  color: #FFF !important;
+}

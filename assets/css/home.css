@@ -1,0 +1,17 @@
+.carousel {
+  height: 180px;
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  border-top: unset;
+  border-bottom: unset;
+}
+
+.heading-content {
+  background-color: #F5F5F5;
+  color: #B4B9BF;
+  font-size: 12px;
+}

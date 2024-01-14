@@ -1,0 +1,23 @@
+body {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #2ABAF7;
+  color: #E8FFFF;
+}
+
+.btn-primary {
+  background-color: #2ABAF7;
+  border-color: #E8FFFF;
+}
+
+.btn-primary:hover {
+  background-color: #2ABAF7 !important;
+  border-color: #E8FFFF !important;
+}
+
+.btn-outline-primary {
+  border-color: #2ABAF7;
+  color: #E8FFFF;
+}
