@@ -47,6 +47,11 @@ if (isset($_SESSION['profile'])) {
     </div>
   </header>
   <main class="container">
+    <?php if (isset($_COOKIE['kas_message'])) : ?>
+      <div class="alert alert-success">
+        <?php echo $_COOKIE['kas_message'] ?>
+      </div>
+    <?php endif; ?>
     <section class="mb-5">
       <div class="row justify-content-between">
         <div class="col-auto">

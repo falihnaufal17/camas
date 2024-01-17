@@ -88,3 +88,69 @@ function getAllKas($id_pengguna)
     throw new Error("ERROR: " . $e->getMessage());
   }
 }
+
+function addKas($pengguna_id)
+{
+  include "../configs/db.php";
+
+  if (isset($_POST['simpan-pemasukan'])) {
+    $type = $_POST['type'];
+    $tanggal_pemasukan = $_POST['date'];
+    $uraian = $_POST['uraian'];
+    $nominal = $_POST['nominal'];
+
+    if (empty($tanggal_pemasukan) || empty($uraian) || empty($nominal)) {
+      foreach ($_POST as $key => $value) {
+        if ($key !== 'simpan-pemasukan' && empty($value)) {
+          $error_messages[$key] = LABEL_FORM_PEMASUKAN[$key] . " harus diisi";
+        }
+      }
+      return $error_messages;
+    } else {
+      try {
+        $sqlInsertDebitCash = "INSERT INTO kas
+          (tipe, dibuat_oleh_id_pengguna, uraian, nominal, tanggal)
+          VALUES (?, ?, ?, ?, ?)";
+        $stmtInsertDebitCash = $conn->prepare($sqlInsertDebitCash);
+        $stmtInsertDebitCash->execute([$type, $pengguna_id, $uraian, $nominal, $tanggal_pemasukan]);
+
+        setcookie('kas_message', "Kas pemasukan telah tercatat", time() + 5);
+
+        header("Location: kas.php");
+      } catch (PDOException $e) {
+        setcookie('kas_message', 'ERROR: ' . $e->getMessage(), time() + 5);
+      }
+    }
+  }
+
+  if (isset($_POST['simpan-pengeluaran'])) {
+    $type_pengeluaran = $_POST['type-pengeluaran'];
+    $tanggal_pengeluaran = $_POST['date-pengeluaran'];
+    $uraian_pengeluaran = $_POST['uraian-pengeluaran'];
+    $nominal_pengeluaran = $_POST['nominal-pengeluaran'];
+
+    if (empty($tanggal_pengeluaran) || empty($uraian_pengeluaran) || empty($nominal_pengeluaran)) {
+      foreach ($_POST as $key => $value) {
+        if ($key !== 'simpan-pengeluaran' && empty($value)) {
+          $error_messages[$key] = LABEL_FORM_PENGELUARAN[$key] . " harus diisi";
+        }
+      }
+
+      return $error_messages;
+    } else {
+      try {
+        $sqlInsertCreditCash = "INSERT INTO kas
+          (tipe, dibuat_oleh_id_pengguna, uraian, nominal, tanggal)
+          VALUES (?, ?, ?, ?, ?)";
+        $stmtInsertCreditCash = $conn->prepare($sqlInsertCreditCash);
+        $stmtInsertCreditCash->execute([$type_pengeluaran, $pengguna_id, $uraian_pengeluaran, $nominal_pengeluaran, $tanggal_pengeluaran]);
+
+        setcookie('kas_message', "Kas pengeluaran telah tercatat", time() + 5);
+
+        header("Location: kas.php");
+      } catch (PDOException $e) {
+        setcookie('kas_message', 'ERROR: ' . $e->getMessage(), time() + 5);
+      }
+    }
+  }
+}
