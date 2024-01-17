@@ -4,15 +4,58 @@ function getTotalKasByTipe($id_pengguna)
 {
   include "../configs/db.php";
 
+  $from = $_GET['from'] ?? null;
+  $to = $_GET['to'] ?? null;
+  $pemasukan = $_GET['pemasukan'] ?? null;
+  $pengeluaran = $_GET['pengeluaran'] ?? null;
+  $whereClause = '';
+
   try {
+    if (!empty($to)) {
+      $whereClause .= " AND kas.tanggal BETWEEN :start_date AND :end_date ";
+    }
+
+    if (!empty($pengeluaran) && empty($pemasukan)) {
+      $whereClause .= " AND kas.tipe = :pengeluaran";
+    }
+
+    if (!empty($pemasukan) && empty($pengeluaran)) {
+      $whereClause .= " AND kas.tipe = :pemasukan";
+    }
+
+    if (!empty($pemasukan) && !empty($pengeluaran)) {
+      $whereClause .= " AND kas.tipe IN (:pemasukan, :pengeluaran)";
+    }
+
     $sqlGetTotalKas = "SELECT
-        SUM(CASE WHEN tipe = 1 THEN nominal ELSE 0 END) AS pemasukan,
-        SUM(CASE WHEN tipe = 2 THEN nominal ELSE 0 END) AS pengeluaran
+        COALESCE(SUM(CASE WHEN tipe = 1 THEN nominal ELSE 0 END), 0) AS pemasukan,
+        COALESCE(SUM(CASE WHEN tipe = 2 THEN nominal ELSE 0 END), 0) AS pengeluaran,
+        COALESCE(
+          GREATEST(
+            SUM(CASE WHEN tipe = 1 THEN nominal ELSE 0 END) - SUM(CASE WHEN tipe = 2 THEN nominal ELSE 0 END
+          ), 0)
+        , 0) AS total
       FROM kas
-      WHERE dibuat_oleh_id_pengguna = ?
-        AND tipe IN (1, 2);";
+      WHERE dibuat_oleh_id_pengguna = :id_pengguna"
+      . $whereClause;
+
     $stmtGetTotalKas = $conn->prepare($sqlGetTotalKas);
-    $stmtGetTotalKas->execute([$id_pengguna]);
+
+    $params = [':id_pengguna' => $id_pengguna];
+    if (!empty($to)) {
+      $params[':start_date'] = $from;
+      $params[':end_date'] = $to;
+    }
+
+    if (!empty($pemasukan)) {
+      $params[':pemasukan'] = $pemasukan;
+    }
+
+    if (!empty($pengeluaran)) {
+      $params[':pengeluaran'] = $pengeluaran;
+    }
+
+    $stmtGetTotalKas->execute($params);
     $rowGetTotalKas = $stmtGetTotalKas->fetchObject();
 
     return $rowGetTotalKas;
@@ -36,18 +79,20 @@ function getAllKas($id_pengguna)
     $sortDirection = ($_GET['sort'] === 'terlama') ? 'ASC' : 'DESC';
   }
 
-  if (isset($_GET['submit-filter'])) {
-    if (!empty($to)) {
-      $whereClause .= " AND kas.tanggal BETWEEN :start_date AND :end_date ";
-    }
+  if (!empty($to)) {
+    $whereClause .= " AND kas.tanggal BETWEEN :start_date AND :end_date ";
+  }
 
-    if (!empty($pengeluaran)) {
-      $whereClause .= " AND kas.tipe = :pengeluaran";
-    }
+  if (!empty($pengeluaran) && empty($pemasukan)) {
+    $whereClause .= " AND kas.tipe = :pengeluaran";
+  }
 
-    if (!empty($pemasukan)) {
-      $whereClause .= " OR kas.tipe = :pemasukan";
-    }
+  if (!empty($pemasukan) && empty($pengeluaran)) {
+    $whereClause .= " AND kas.tipe = :pemasukan";
+  }
+
+  if (!empty($pemasukan) && !empty($pengeluaran)) {
+    $whereClause .= " AND kas.tipe IN (:pemasukan, :pengeluaran)";
   }
 
   $orderByClause = "ORDER BY kas.created_at " . $sortDirection;
@@ -58,7 +103,8 @@ function getAllKas($id_pengguna)
             kas.nominal AS nominal,
             kas.uraian AS uraian,
             kas.tanggal AS tanggal,
-            pengguna.nama AS nama
+            pengguna.nama AS nama,
+            kas.created_at
             FROM kas 
             LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
             WHERE kas.dibuat_oleh_id_pengguna = :id_pengguna"

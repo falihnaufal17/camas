@@ -1,6 +1,6 @@
 <?php 
   function register() {
-    include_once "../configs/db.php";
+    include "../configs/db.php";
     if (
       !empty($_POST['nama']) &&
       !empty($_POST['no_hp']) &&

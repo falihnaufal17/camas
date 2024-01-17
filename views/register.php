@@ -1,5 +1,5 @@
 <?php
-include_once "../controllers/register.php";
+include "../controllers/register.php";
 
 $error_message = [];
 $message = '';

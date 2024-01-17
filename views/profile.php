@@ -1,5 +1,5 @@
 <?php
-include_once "../controllers/profile.php";
+include "../controllers/profile.php";
 
 if (isset($_POST['logout'])) {
   logout();
@@ -35,26 +35,7 @@ if (!isset($_SESSION['profile'])) {
     <form method="post">
       <button type="submit" name="logout" class="btn btn-danger rounded">Keluar <i class="fa-solid fa-arrow-right-from-bracket"></i> </button>
     </form>
-    <nav class="nav shadow bottom-nav justify-content-between px-3 py-2">
-      <a href="home.php" class="text-center text-decoration-none text-dark">
-        <div>
-          <i class="fa fa-home"></i>
-        </div>
-        <small>Beranda</small>
-      </a>
-      <a href="kas.php" class="text-center text-decoration-none text-dark">
-        <div>
-          <i class="fa fa-wallet"></i>
-        </div>
-        <small>Kas</small>
-      </a>
-      <a href="profile.php" class="text-center text-decoration-none">
-        <div>
-          <i class="fa fa-user"></i>
-        </div>
-        <small>Profil</small>
-      </a>
-    </nav>
+    <?php include '../components/bottom-nav.php' ?>
   </main>
 </body>
 

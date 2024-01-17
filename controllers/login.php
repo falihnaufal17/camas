@@ -3,7 +3,7 @@ session_start();
 
 function login()
 {
-  include_once "../configs/db.php";
+  include "../configs/db.php";
   if (
     !empty($_POST['no_hp']) &&
     !empty($_POST['password'])
