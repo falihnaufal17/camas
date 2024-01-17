@@ -1,10 +1,9 @@
 <?php
-include '../configs/db.php';
+include_once "../controllers/kas.php";
 
 session_start();
 $total = 0;
 $totalCredit = 0;
-$error_messages = [];
 
 define('LABEL_FORM_FILTER', [
   'from' => 'Tanggal dari',
@@ -12,63 +11,15 @@ define('LABEL_FORM_FILTER', [
 ]);
 
 if (isset($_SESSION['profile'])) {
-  $id_pengguna = $_SESSION['profile']['id'];
+  $id_pengguna = $_SESSION['profile']->id;
 
   // mendapatkan total pemasukan kas
-  $sqlGetTotalKas = "SELECT
-    SUM(CASE WHEN tipe = 1 THEN nominal ELSE 0 END) AS pemasukan,
-    SUM(CASE WHEN tipe = 2 THEN nominal ELSE 0 END) AS pengeluaran
-  FROM kas
-  WHERE dibuat_oleh_id_pengguna = $id_pengguna
-    AND tipe IN (1, 2);";
-  $resultQueryGetTotalKas = $conn->query($sqlGetTotalKas);
-  $rowGetTotalKas = $resultQueryGetTotalKas->fetch_assoc();
-  $total = $rowGetTotalKas['pemasukan'];
-  $totalCredit = $rowGetTotalKas['pengeluaran'];
+  $kas = getTotalKasByTipe($id_pengguna);
+  $total = $kas->pemasukan;
+  $totalCredit = $kas->pengeluaran;
 
   // mendapatkan list kas
-  $sortDirection = 'DESC';
-  $whereClause = '';
-
-  if (isset($_GET['sort'])) {
-    if ($_GET['sort'] === 'terlama') {
-      $sortDirection = 'ASC';
-    } else {
-      $sortDirection = 'DESC';
-    }
-  }
-
-  if (isset($_GET['submit-filter'])) {
-    if (!empty($_GET['to'])) {
-      $whereClause .= " AND kas.tanggal BETWEEN " . $_GET['from'] . " AND " . $_GET['to'] . "";
-      if (isset($_GET['pemasukan'])) {
-        if ($_GET['pemasukan'] === "1") {
-          $whereClause .= " AND kas.tipe = 1";
-        }
-      }
-    
-      if (isset($_GET['pengeluaran'])) {
-        if ($_GET['pengeluaran'] === "2") {
-          $whereClause .= " AND kas.tipe = 2";
-        }
-      }
-    } else {
-      $error_messages['to'] = LABEL_FORM_FILTER['to'] . " harus diisi";
-    }
-  }
-
-  $orderByClause = "ORDER BY kas.created_at $sortDirection";
-  $sqlGetAllKas = "SELECT 
-      kas.tipe AS tipe, kas.nominal AS nominal, kas.uraian AS uraian, kas.tanggal AS tanggal, pengguna.nama AS nama
-      FROM kas 
-      LEFT JOIN pengguna
-      ON pengguna.id = kas.dibuat_oleh_id_pengguna
-      WHERE kas.dibuat_oleh_id_pengguna = $id_pengguna"
-    . $whereClause . " "
-    . $orderByClause;
-  $resultQueryGetAllKas = $conn->query($sqlGetAllKas);
-
-  $conn->close();
+  $resultQueryGetAllKas = getAllKas($id_pengguna);
 } else {
   header('Location: login.php');
 }
@@ -123,7 +74,7 @@ if (isset($_SESSION['profile'])) {
           </div>
         </div>
         <div class="col-auto">
-          <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#filterModal">Filter</button>
+          <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#filterModal">Filter <i class="fa-solid fa-filter"></i></button>
           <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
               <div class="modal-content">
@@ -138,12 +89,11 @@ if (isset($_SESSION['profile'])) {
                       <div class="row row-gap-2 ">
                         <div class="col">
                           <label for="dari">Dari</label>
-                          <input class="form-control" value="<?php echo $_GET['from'] ?>" type="date" name="from" id="date-dari" required>
+                          <input class="form-control" value="<?php echo $_GET['from'] ?>" type="date" name="from" id="date-dari">
                         </div>
                         <div class="col">
                           <label for="dari">Sampai</label>
-                          <input class="form-control <?php echo isset($error_messages['to']) ? 'border-danger' : '' ?>" value="<?php echo $_GET['to'] ?>" type="date" name="to" id="date-sampai" required>
-                          <small class="text-danger"><?php echo isset($error_messages['to']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_messages['to'] : '' ?></small>
+                          <input class="form-control" value="<?php echo $_GET['to'] ?>" type="date" name="to" id="date-sampai">
                         </div>
                       </div>
                     </div>
@@ -166,24 +116,30 @@ if (isset($_SESSION['profile'])) {
         </div>
       </div>
     </section>
-    <section class="d-flex flex-column row-gap-3">
-      <?php foreach ($resultQueryGetAllKas as $row) : ?>
-        <div class="card">
-          <div class="card-body row justify-content-between  align-items-center">
-            <div class="col">
-              <h5><?php echo $row['uraian'] ?></h5>
-              <div>Tanggal: <?php echo date_format(date_create($row['tanggal']), 'd M Y'); ?></div>
-              <div>Dicatat oleh: <?php echo $row['nama'] ?></div>
+    <section>
+      <?php if ($resultQueryGetAllKas) : ?>
+        <div class="d-flex flex-column row-gap-3"> 
+          <?php foreach ($resultQueryGetAllKas as $row) : ?>
+            <div class="card">
+              <div class="card-body row justify-content-between  align-items-center">
+                <div class="col">
+                  <h5><?php echo $row['uraian'] ?></h5>
+                  <div>Tanggal: <?php echo date_format(date_create($row['tanggal']), 'd M Y'); ?></div>
+                  <div>Dicatat oleh: <?php echo $row['nama'] ?></div>
+                </div>
+                <div class="col-auto">
+                  <h5 class="<?php echo $row['tipe'] === '1' ? 'text-success' : 'text-danger' ?>">
+                    <i class="fa <?php echo $row['tipe'] === '1' ? 'fa-arrow-up' : 'fa-arrow-down' ?>"></i>
+                    <?php echo 'Rp' . number_format($row['nominal'], 0, ',', '.') ?>
+                  </h5>
+                </div>
+              </div>
             </div>
-            <div class="col-auto">
-              <h5 class="<?php echo $row['tipe'] === '1' ? 'text-success' : 'text-danger' ?>">
-                <i class="fa <?php echo $row['tipe'] === '1' ? 'fa-arrow-up' : 'fa-arrow-down' ?>"></i>
-                <?php echo 'Rp' . number_format($row['nominal'], 0, ',', '.') ?>
-              </h5>
-            </div>
-          </div>
+          <?php endforeach; ?>
         </div>
-      <?php endforeach; ?>
+      <?php else : ?>
+        <p class="text-center">Belum ada data kas yang tercatat</p>
+      <?php endif; ?>
     </section>
     <nav class="nav shadow bottom-nav justify-content-between px-3 py-2 bg-white ">
       <a href="home.php" class="text-center text-decoration-none text-dark">

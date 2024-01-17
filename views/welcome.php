@@ -1,16 +1,3 @@
-<?php
-require '../configs/db.php';
-
-$message = '';
-
-if (isset($_POST['daftar'])) {
-  $no_hp = $_POST['no_hp'];
-  $password = $_POST['password'];
-
-  $password_verified = password_verify($password, '');
-}
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,5 +1,11 @@
 <?php
+include_once "../controllers/profile.php";
+
 session_start();
+
+if (isset($_POST['logout'])) {
+  logout();
+}
 
 if (!isset($_SESSION['profile'])) {
   header('Location: login.php');
@@ -28,6 +34,9 @@ if (!isset($_SESSION['profile'])) {
     </div>
   </header>
   <main class="container">
+    <form method="post">
+      <button type="submit" name="logout" class="btn btn-danger rounded">Keluar <i class="fa-solid fa-arrow-right-from-bracket"></i> </button>
+    </form>
     <nav class="nav shadow bottom-nav justify-content-between px-3 py-2">
       <a href="home.php" class="text-center text-decoration-none text-dark">
         <div>

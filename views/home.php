@@ -54,7 +54,7 @@ if (!isset($_SESSION['profile'])) {
   <main>
     <section class="bg-primary">
       <div class="container text-white py-3">
-        <h1 class="text-capitalize mb-4">Assalamu'alaikum <?php echo $_SESSION['profile']['nama'] ?></h1>
+        <h1 class="text-capitalize mb-4">Assalamu'alaikum <?php echo $_SESSION['profile']->nama ?></h1>
         <div id="carouselExampleIndicators" class="carousel slide pointer-event " data-bs-touch="true" data-bs-ride="carousel">
           <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>

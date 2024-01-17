@@ -1,47 +1,18 @@
 <?php
-require '../configs/db.php';
 
-session_start();
+include "../controllers/login.php";
 
 $error_message = [];
-$message = '';
 
-define('LABEL_FORM', [
+define('LABEL_FORM_LOGIN', [
   'no_hp' => 'No Hp',
   'password' => 'Password'
 ]);
 
+session_start();
+
 if (isset($_POST['masuk'])) {
-  if (
-    !empty($_POST['no_hp']) &&
-    !empty($_POST['password'])
-  ) {
-    $no_hp = $_POST['no_hp'];
-    $password = $_POST['password'];
-
-    $sqlGetUserByPhone = "SELECT * FROM pengguna WHERE no_hp = '$no_hp'";
-    $resultGetUserByPhone = $conn->query($sqlGetUserByPhone);
-    $data = $resultGetUserByPhone->fetch_assoc();
-
-    if ($data) {
-      $password_verified = password_verify($password, $data['password']);
-  
-      if ($password_verified) {
-        $_SESSION['profile'] = $data;
-      } else {
-        $error_message['password'] = LABEL_FORM['password'] . " salah";
-      }
-    } else {
-      $error_message['no_hp'] = LABEL_FORM['no_hp'] . " belum terdaftar";
-    }
-    
-  } else {
-    foreach ($_POST as $key => $value) {
-      if ($key !== 'masuk' && $value === '') {
-        $error_message[$key] = LABEL_FORM[$key] . " harus diisi";
-      }
-    }
-  }
+    $error_message = login();
 }
 
 if (isset($_SESSION['profile'])) {
