@@ -1,4 +1,7 @@
 <?php
+
+include '../controllers/home.php';
+
 session_start();
 
 // Array nama bulan dalam bahasa Indonesia
@@ -26,6 +29,10 @@ $tahun_ini = date('Y');
 if (!isset($_SESSION['profile'])) {
   header('Location: login.php');
 }
+
+$dataKas = getTotalKas($_SESSION['profile']->id);
+$dataHistory = getHistoryKas($_SESSION['profile']->id);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,16 +68,8 @@ if (!isset($_SESSION['profile'])) {
           <div class="carousel-inner">
             <div class="carousel-item active">
               <h2 class="mb-3 fs-4">Laporan Kas Bulan <?php echo $nama_bulan[$bulan_ini] . " " . $tahun_ini ?></h2>
-              <div class="d-flex justify-content-between">
-                <div class="mb-3">
-                  <h3 class="mb-2 fs-6">Pemasukan <i class="fa-solid fa-arrow-up ms-1"></i></h3>
-                  <h3 class="fs-3">Rp 6.000.000</h3>
-                </div>
-                <div class="mb-3">
-                  <h3 class="mb-2 fs-6">Pengeluaran <i class="fa-solid fa-arrow-down ms-1"></i></h3>
-                  <h3 class="fs-5">Rp 3.000.000</h3>
-                </div>
-              </div>
+              <h3>Total Kas</h3>
+              <h2 class="fw-bold"><?php echo "Rp" . number_format($dataKas->total, 0, ',', '.') ?></h3>
             </div>
             <div class="carousel-item">
               <div class="mb-3">
@@ -89,24 +88,30 @@ if (!isset($_SESSION['profile'])) {
         </div>
       </div>
       <div class="container">
-        <div class="row justify-content-between align-items-center mb-1">
-          <div class="col">
-            <h6>Uraian</h6>
-            <p>20 Januari 2024 18:12</p>
+        <?php if ($dataHistory) : ?>
+          <div class="d-flex flex-column row-gap-3">
+            <?php foreach ($dataHistory as $row) : ?>
+              <div class="card">
+                <div class="card-body row justify-content-between flex-md-row flex-column-reverse align-items-md-center">
+                  <div class="col">
+                    <h5><?php echo $row['uraian'] ?></h5>
+                    <div>Tanggal: <?php echo date_format(date_create($row['tanggal']), 'd M Y'); ?></div>
+                    <div>Dicatat oleh: <?php echo $row['nama'] ?></div>
+                    <div>Dicatat pada: <?php echo date_format(date_create($row['created_at']), 'd M Y'); ?></div>
+                  </div>
+                  <div class="col-12 col-md-auto">
+                    <h5 class="<?php echo $row['tipe'] === '1' ? 'text-success' : 'text-danger' ?>">
+                      <i class="fa <?php echo $row['tipe'] === '1' ? 'fa-arrow-up' : 'fa-arrow-down' ?>"></i>
+                      <?php echo 'Rp' . number_format($row['nominal'], 0, ',', '.') ?>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
           </div>
-          <div class="col-auto">
-            <p class="text-success fw-bold"><i class="fa-solid fa-arrow-up ms-1"></i> Rp2.000</p>
-          </div>
-        </div>
-        <div class="row justify-content-between align-items-center mb-1 ">
-          <div class="col">
-            <h6>Uraian</h6>
-            <p>20 Januari 2024 18:12</p>
-          </div>
-          <div class="col-auto">
-            <p class="text-danger fw-bold"><i class="fa-solid fa-arrow-down ms-1"></i> Rp500</p>
-          </div>
-        </div>
+        <?php else : ?>
+          <p class="text-center">Belum ada data kas yang tercatat</p>
+        <?php endif; ?>
       </div>
     </section>
     <?php include '../components/bottom-nav.php' ?>
