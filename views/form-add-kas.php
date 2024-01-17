@@ -60,18 +60,18 @@
           <input type="hidden" name="type" value="1">
           <div class="mb-3">
             <label>Tanggal</label>
-            <input type="date" name="date" value="<?php echo $_POST['date'] ?>" class="form-control <?php echo $error_messages['date'] ? 'border-danger' : '' ?>" />
-            <small class="text-danger"><?php echo $error_messages['date'] ?></small>
+            <input type="date" name="date" value="<?php echo $_POST['date'] ?? '' ?>" class="form-control <?php echo isset($error_messages['date']) ? 'border-danger' : '' ?>" />
+            <small class="text-danger"><?php echo $error_messages['date'] ?? '' ?></small>
           </div>
           <div class="mb-3">
             <label>Uraian</label>
-            <textarea name="uraian" class="form-control <?php echo $error_messages['uraian'] ? 'border-danger' : '' ?>"><?php echo $_POST['uraian'] ?></textarea>
-            <small class="text-danger"><?php echo $error_messages['uraian'] ?></small>
+            <textarea name="uraian" class="form-control <?php echo isset($error_messages['uraian']) ? 'border-danger' : '' ?>"><?php echo $_POST['uraian'] ?? '' ?></textarea>
+            <small class="text-danger"><?php echo $error_messages['uraian'] ?? '' ?></small>
           </div>
           <div class="mb-3">
             <label>Nominal</label>
-            <input type="tel" name="nominal" value="<?php echo $_POST['nominal'] ?>" class="form-control <?php echo $error_messages['nominal'] ? 'border-danger' : '' ?>" />
-            <small class="text-danger"><?php echo $error_messages['nominal'] ?></small>
+            <input type="tel" name="nominal" value="<?php echo $_POST['nominal'] ?? '' ?>" class="form-control <?php echo isset($error_messages['nominal']) ? 'border-danger' : '' ?>" />
+            <small class="text-danger"><?php echo $error_messages['nominal'] ?? '' ?></small>
           </div>
           <button class="btn btn-primary w-100" type="submit" name="simpan-pemasukan">Simpan</button>
         </form>
@@ -81,18 +81,18 @@
           <input type="hidden" name="type-pengeluaran" value="2">
           <div class="mb-3">
             <label>Tanggal</label>
-            <input type="date" name="date-pengeluaran" value="<?php echo $_POST['date-pengeluaran'] ?>" class="form-control <?php echo $error_messages['date-pengeluaran'] ? 'border-danger' : '' ?>" />
-            <small class="text-danger"><?php echo $error_messages['date-pengeluaran'] ?></small>
+            <input type="date" name="date-pengeluaran" value="<?php echo $_POST['date-pengeluaran'] ?? '' ?>" class="form-control <?php echo $error_messages['date-pengeluaran'] ? 'border-danger' : '' ?>" />
+            <small class="text-danger"><?php echo $error_messages['date-pengeluaran'] ?? '' ?></small>
           </div>
           <div class="mb-3">
             <label>Uraian</label>
-            <textarea name="uraian-pengeluaran" class="form-control <?php echo $error_messages['uraian-pengeluaran'] ? 'border-danger' : '' ?>"><?php echo $_POST['uraian-pengeluaran'] ?></textarea>
-            <small class="text-danger"><?php echo $error_messages['uraian-pengeluaran'] ?></small>
+            <textarea name="uraian-pengeluaran" class="form-control <?php echo isset($error_messages['uraian-pengeluaran']) ? 'border-danger' : '' ?>"><?php echo $_POST['uraian-pengeluaran'] ?? '' ?></textarea>
+            <small class="text-danger"><?php echo $error_messages['uraian-pengeluaran'] ?? '' ?></small>
           </div>
           <div class="mb-3">
             <label>Nominal</label>
-            <input type="tel" name="nominal-pengeluaran" value="<?php echo $_POST['nominal-pengeluaran'] ?>" class="form-control <?php echo $error_messages['nominal-pengeluaran'] ? 'border-danger' : '' ?>" />
-            <small class="text-danger"><?php echo $error_messages['nominal-pengeluaran'] ?></small>
+            <input type="tel" name="nominal-pengeluaran" value="<?php echo $_POST['nominal-pengeluaran'] ?? '' ?>" class="form-control <?php echo isset($error_messages['nominal-pengeluaran']) ? 'border-danger' : '' ?>" />
+            <small class="text-danger"><?php echo $error_messages['nominal-pengeluaran'] ?? '' ?></small>
           </div>
           <button class="btn btn-primary w-100" type="submit" name="simpan-pengeluaran">Simpan</button>
         </form>

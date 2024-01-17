@@ -9,8 +9,6 @@ define('LABEL_FORM_LOGIN', [
   'password' => 'Password'
 ]);
 
-session_start();
-
 if (isset($_POST['masuk'])) {
     $error_message = login();
 }
@@ -54,11 +52,11 @@ if (isset($_SESSION['profile'])) {
         <input
           type="tel"
           name="no_hp"
-          class="form-control <?php echo $error_message['no_hp'] ? 'border-danger' : '' ?>"
-          value="<?php echo $_POST['no_hp'] ?>"
+          class="form-control <?php echo isset($error_message['no_hp']) ? 'border-danger' : '' ?>"
+          value="<?php echo $_POST['no_hp'] ?? '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['no_hp'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['no_hp'] : ''; ?>
+          <?php echo isset($error_message['no_hp']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['no_hp'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
@@ -66,11 +64,11 @@ if (isset($_SESSION['profile'])) {
         <input
           type="password"
           name="password"
-          class="form-control <?php echo $error_message['password'] ? 'border-danger' : '' ?>"
-          value="<?php echo $_POST['password'] ?>" 
+          class="form-control <?php echo isset($error_message['password']) ? 'border-danger' : '' ?>"
+          value="<?php echo $_POST['password'] ?? '' ?>" 
         />
         <small class="text-danger">
-          <?php echo $error_message['password'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['password'] : ''; ?>
+          <?php echo isset($error_message['password']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['password'] : ''; ?>
         </small>
       </div>
       <button type="submit" class="btn btn-outline-primary mb-3 w-100" name="masuk">Masuk</button>

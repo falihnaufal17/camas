@@ -47,12 +47,12 @@ if (isset($_POST['daftar'])) {
         <input
           type="text"
           name="nama"
-          value="<?php echo $_POST['nama'] ?>"
+          value="<?php echo isset($_POST['nama']) ? $_POST['nama'] : '' ?>"
           id="nama"
-          class="form-control <?php echo $error_message['nama'] ? 'border-danger' : '' ?>"
+          class="form-control <?php echo isset($error_message['nama']) ? 'border-danger' : '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['nama'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['nama'] : ''; ?>
+          <?php echo isset($error_message['nama']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['nama'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
@@ -60,20 +60,20 @@ if (isset($_POST['daftar'])) {
         <input
           type="tel"
           name="no_hp"
-          value="<?php echo $_POST['no_hp'] ?>"
-          class="form-control <?php echo $error_message['no_hp'] ? 'border-danger' : '' ?>"
+          value="<?php echo $_POST['no_hp'] ?? '' ?>"
+          class="form-control <?php echo isset($error_message['no_hp']) ? 'border-danger' : '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['no_hp'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['no_hp'] : ''; ?>
+          <?php echo isset($error_message['no_hp']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['no_hp'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
         <label>Alamat</label>
         <textarea
           name="alamat"
-          class="form-control <?php echo $error_message['alamat'] ? 'border-danger' : '' ?>"><?php echo $_POST['alamat'] ?></textarea>
+          class="form-control <?php echo isset($error_message['alamat']) ? 'border-danger' : '' ?>"><?php echo $_POST['alamat'] ?? '' ?></textarea>
         <small class="text-danger">
-          <?php echo $error_message['alamat'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['alamat'] : ''; ?>
+          <?php echo isset($error_message['alamat']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['alamat'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
@@ -81,44 +81,44 @@ if (isset($_POST['daftar'])) {
         <input
           type="text"
           name="nama_masjid"
-          value="<?php echo $_POST['nama_masjid'] ?>"
-          class="form-control <?php echo $error_message['nama_masjid'] ? 'border-danger' : '' ?>"
+          value="<?php echo $_POST['nama_masjid'] ?? '' ?>"
+          class="form-control <?php echo isset($error_message['nama_masjid']) ? 'border-danger' : '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['nama_masjid'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['nama_masjid'] : ''; ?>
+          <?php echo isset($error_message['nama_masjid']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['nama_masjid'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
         <label>Alamat Masjid</label>
         <textarea
           name="alamat_masjid"
-          class="form-control <?php echo $error_message['alamat_masjid'] ? 'border-danger' : '' ?>"><?php echo $_POST['alamat_masjid'] ?></textarea>
+          class="form-control <?php echo isset($error_message['alamat_masjid']) ? 'border-danger' : '' ?>"><?php echo $_POST['alamat_masjid'] ?? '' ?></textarea>
         <small class="text-danger">
-          <?php echo $error_message['alamat_masjid'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['alamat_masjid'] : ''; ?>
+          <?php echo isset($error_message['alamat_masjid']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['alamat_masjid'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
         <label>Password</label>
         <input
           type="password"
-          value="<?php echo $_POST['password'] ?>"
+          value="<?php echo $_POST['password'] ?? '' ?>"
           name="password"
-          class="form-control <?php echo $error_message['password'] ? 'border-danger' : '' ?>"
+          class="form-control <?php echo isset($error_message['password']) ? 'border-danger' : '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['password'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['password'] : ''; ?>
+          <?php echo isset($error_message['password']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['password'] : ''; ?>
         </small>
       </div>
       <div class="mb-3">
         <label>Konfirmasi Password</label>
         <input
           type="password"
-          value="<?php echo $_POST['konfirmasi_password'] ?>"
+          value="<?php echo $_POST['konfirmasi_password'] ?? '' ?>"
           name="konfirmasi_password"
-          class="form-control <?php echo $error_message['konfirmasi_password'] ? 'border-danger' : '' ?>"
+          class="form-control <?php echo isset($error_message['konfirmasi_password']) ? 'border-danger' : '' ?>"
         />
         <small class="text-danger">
-          <?php echo $error_message['konfirmasi_password'] ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['konfirmasi_password'] : ''; ?>
+          <?php echo isset($error_message['konfirmasi_password']) ? '<i class="fa-solid fa-circle-exclamation"></i> ' . $error_message['konfirmasi_password'] : ''; ?>
         </small>
       </div>
       <button type="submit" class="btn btn-outline-primary w-100" name="daftar">Daftar</button>

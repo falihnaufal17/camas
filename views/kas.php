@@ -94,11 +94,11 @@ if (isset($_SESSION['profile'])) {
                       <div class="row row-gap-2 ">
                         <div class="col">
                           <label for="dari">Dari</label>
-                          <input class="form-control" value="<?php echo $_GET['from'] ?>" type="date" name="from" id="date-dari">
+                          <input class="form-control" value="<?php echo $_GET['from'] ?? '' ?>" type="date" name="from" id="date-dari">
                         </div>
                         <div class="col">
                           <label for="dari">Sampai</label>
-                          <input class="form-control" value="<?php echo $_GET['to'] ?>" type="date" name="to" id="date-sampai">
+                          <input class="form-control" value="<?php echo $_GET['to'] ?? '' ?>" type="date" name="to" id="date-sampai">
                         </div>
                       </div>
                     </div>

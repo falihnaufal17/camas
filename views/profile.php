@@ -1,8 +1,6 @@
 <?php
 include_once "../controllers/profile.php";
 
-session_start();
-
 if (isset($_POST['logout'])) {
   logout();
 }
