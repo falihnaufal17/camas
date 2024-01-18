@@ -40,7 +40,7 @@
             $stmtInsertNewUser->execute([$nama, $no_hp, $alamat, $nama_masjid, $alamat_masjid, 1, $password_hashed]);
 
             setcookie('register_message', "Registrasi DKM berhasil. Silakan masuk.", time() + 5);
-            header('Location: login.php');
+            header('Location: index.php?page=login-page');
           }
         } catch (PDOException $e) {
           setcookie('register_message', "ERROR: " . $e->getMessage() . "", time() + 5);

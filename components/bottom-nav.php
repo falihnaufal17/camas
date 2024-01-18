@@ -1,27 +1,17 @@
-<?php
-  date_default_timezone_set('Asia/Jakarta');
-
-  $pathUrl = $_SERVER['REQUEST_URI'];
-  $arrPath = explode('/', $pathUrl);
-  $arrLengthPath = count($arrPath);
-  $fileName = $arrPath[$arrLengthPath - 1];
-  $arrFileName = explode('.', $fileName);
-  $routeName = $arrFileName[0];
-?>
 <nav class="nav shadow bottom-nav justify-content-between px-3 py-2 bg-white">
-  <a href="home.php" class="text-center text-decoration-none <?php echo $routeName === 'home' ? '' : 'text-dark' ?>">
+  <a href="index.php?page=home-page" class="text-center text-decoration-none <?php echo $_GET['page'] === 'home-page' ? '' : 'text-dark' ?>">
     <div>
       <i class="fa fa-home"></i>
     </div>
     <small>Beranda</small>
   </a>
-  <a href="kas.php?<?php echo "from=" . date('Y-m-01') . "&to=" . date('Y-m-d') ?>" class="text-center text-decoration-none <?php echo $routeName === 'kas' ? '' : 'text-dark' ?>">
+  <a href="index.php?page=kas-page&<?php echo "from=" . date('Y-m-01') . "&to=" . date('Y-m-d') ?>" class="text-center text-decoration-none <?php echo $_GET['page'] === 'kas-page' ? '' : 'text-dark' ?>">
     <div>
       <i class="fa fa-wallet"></i>
     </div>
     <small>Kas</small>
   </a>
-  <a href="profile.php" class="text-center text-decoration-none <?php echo $routeName === 'profile' ? '' : 'text-dark' ?>">
+  <a href="index.php?page=profile-page" class="text-center text-decoration-none <?php echo $_GET['page'] === 'profile-page' ? '' : 'text-dark' ?>">
     <div>
       <i class="fa fa-user"></i>
     </div>

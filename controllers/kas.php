@@ -98,7 +98,8 @@ function getAllKas($id_pengguna)
   $orderByClause = "ORDER BY kas.created_at " . $sortDirection;
 
   try {
-    $sqlGetAllKas = "SELECT 
+    $sqlGetAllKas = "SELECT
+            kas.id AS id,
             kas.tipe AS tipe,
             kas.nominal AS nominal,
             kas.uraian AS uraian,
@@ -161,8 +162,7 @@ function addKas($pengguna_id)
         $stmtInsertDebitCash->execute([$type, $pengguna_id, $uraian, $nominal, $tanggal_pemasukan]);
 
         setcookie('kas_message', "Kas pemasukan telah tercatat", time() + 5);
-
-        header("Location: kas.php");
+        header('Location: index.php?page=form-add-kas-page');
       } catch (PDOException $e) {
         setcookie('kas_message', 'ERROR: ' . $e->getMessage(), time() + 5);
       }
@@ -192,11 +192,79 @@ function addKas($pengguna_id)
         $stmtInsertCreditCash->execute([$type_pengeluaran, $pengguna_id, $uraian_pengeluaran, $nominal_pengeluaran, $tanggal_pengeluaran]);
 
         setcookie('kas_message', "Kas pengeluaran telah tercatat", time() + 5);
-
-        header("Location: kas.php");
+        header('Location: index.php?page=form-add-kas-page');
       } catch (PDOException $e) {
         setcookie('kas_message', 'ERROR: ' . $e->getMessage(), time() + 5);
       }
     }
+  }
+}
+
+function deleteKas($id) {
+  include '../configs/db.php';
+
+  try {
+    $sqlDeleteKas = "DELETE FROM kas WHERE id = :id";
+    $stmtDeleteKas = $conn->prepare($sqlDeleteKas);
+    
+    $params = [
+      ':id' => $id
+    ];
+
+    $stmtDeleteKas->execute($params);
+
+    setcookie('kas_message', "Kas berhasil dihapus", time() + 5);
+    
+    header("Location: index.php?page=kas-page&from=" . date('Y-m-01') . "&to=" . date('Y-m-d'));
+  } catch (PDOException $e) {
+    echo "ERROR: " . $e->getMessage();
+  }
+}
+
+function getDetailKas($id) {
+  include '../configs/db.php';
+
+  try {
+    $sqlGetDetailKas = "SELECT * FROM kas WHERE id = :id";
+    $stmtDetailKas = $conn->prepare($sqlGetDetailKas);
+
+    $params = [":id" => $id];
+    
+    $stmtDetailKas->execute($params);
+    $data = $stmtDetailKas->fetch(PDO::FETCH_ASSOC);
+
+    return $data;
+  } catch (PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
+  }
+}
+
+function updateKas($id, $id_pengguna) {
+  include '../configs/db.php';
+
+  $tipe = $_POST['tipe'];
+  $tanggal = $_POST['tanggal'];
+  $uraian = $_POST['uraian'];
+  $nominal = $_POST['nominal'];
+
+  try {
+    $sqlUpdateKas = "UPDATE kas SET tipe=:tipe, tanggal=:tanggal, uraian=:uraian, nominal=:nominal, diubah_oleh_id_pengguna=:ubah_id_pengguna
+      WHERE id = :id";
+    $stmtUpdateKas = $conn->prepare($sqlUpdateKas);
+    $params = [
+      ':tipe' => $tipe,
+      ':tanggal' => $tanggal,
+      ':uraian' => $uraian,
+      ':nominal' => $nominal,
+      ':ubah_id_pengguna' => $id_pengguna,
+      ':id' => $id,
+    ];
+    $stmtUpdateKas->execute($params);
+
+    setcookie("kas_message", "Berhasil mengubah data kas", time() + 5);
+
+    header('Location: index.php?page=kas-page&from=' . date('Y-m-01') . '&to=' . date('Y-m-d'));
+  } catch (PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
   }
 }

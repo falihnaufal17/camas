@@ -1,5 +1,4 @@
 <?php
-
 function getTotalKas($id_pengguna)
 {
   include '../configs/db.php';
@@ -39,7 +38,7 @@ function getHistoryKas($id_pengguna)
 {
   include "../configs/db.php";
   $startDateOfMonth = date('Y-m-01');
-  $currentDateOfMonth = date('Y-m-d');
+  $currentDateOfMonth = date('Y-m-d', strtotime("+1 days"));
 
   try {
     $sqlGetAllKas = "SELECT 
@@ -47,12 +46,16 @@ function getHistoryKas($id_pengguna)
       kas.nominal AS nominal,
       kas.uraian AS uraian,
       kas.tanggal AS tanggal,
-      pengguna.nama AS nama,
-      kas.created_at
+      -- Get nama pembuat,
+      -- get nama pengubah
+      kas.created_at,
+      kas.updated_at
       FROM kas 
       LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
+      LEFT JOIN pengguna ON pengguna.id = kas.diubah_oleh_id_pengguna
       WHERE kas.dibuat_oleh_id_pengguna = :id_pengguna
-    AND tanggal BETWEEN :start_date AND :end_date";
+    AND kas.updated_at BETWEEN :start_date AND :end_date
+    ORDER BY kas.updated_at DESC";
 
     $stmtGetAllKas = $conn->prepare($sqlGetAllKas);
 
@@ -67,6 +70,6 @@ function getHistoryKas($id_pengguna)
 
     return $rowGetAllKas ?? [];
   } catch (PDOException $e) {
-    throw new Error("ERROR: " . $e->getMessage());
+    echo 'ERROR: ' . $e->getMessage();
   }
 }
