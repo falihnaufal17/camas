@@ -30,6 +30,7 @@ if (!isset($_SESSION['profile'])) {
 
 $dataKas = getTotalKas($_SESSION['profile']->id);
 $dataHistory = getHistoryKas($_SESSION['profile']->id);
+$dataCountAnggota = countAnggota($_SESSION['profile']->id);
 
 ?>
 <header class="navbar shadow-sm ">
@@ -57,7 +58,7 @@ $dataHistory = getHistoryKas($_SESSION['profile']->id);
           <div class="carousel-item">
             <div class="mb-3">
               <h2 class="mb-2 fs-4">Keanggotaan Bendahara <i class="fa-solid fa-user-group ms-1"></i></h2>
-              <h3 class="fs-3">1 Anggota</h3>
+              <h3 class="fs-3"><?= $dataCountAnggota ?> Anggota</h3>
             </div>
           </div>
         </div>
@@ -79,7 +80,8 @@ $dataHistory = getHistoryKas($_SESSION['profile']->id);
                 <div class="col">
                   <h5><?php echo $row['uraian'] ?></h5>
                   <div>Tanggal: <?php echo date_format(date_create($row['tanggal']), 'd M Y'); ?></div>
-                  <div>Dicatat oleh: <?php echo $row['nama'] ?></div>
+                  <div>Dicatat oleh: <?php echo $row['nama_pembuat'] ?></div>
+                  <div>Diubah oleh: <?php echo $row['nama_pengubah'] ?></div>
                   <div>Dicatat pada: <?php echo date_format(date_create($row['created_at']), 'd M Y H:i:s'); ?></div>
                   <div>Diubah pada: <?php echo date_format(date_create($row['updated_at']), 'd M Y H:i:s'); ?></div>
                 </div>

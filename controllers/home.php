@@ -46,13 +46,13 @@ function getHistoryKas($id_pengguna)
       kas.nominal AS nominal,
       kas.uraian AS uraian,
       kas.tanggal AS tanggal,
-      -- Get nama pembuat,
-      -- get nama pengubah
+      pembuat.nama AS nama_pembuat,
+      pengubah.nama AS nama_pengubah,
       kas.created_at,
       kas.updated_at
       FROM kas 
-      LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
-      LEFT JOIN pengguna ON pengguna.id = kas.diubah_oleh_id_pengguna
+      LEFT JOIN pengguna AS pembuat ON pembuat.id = kas.dibuat_oleh_id_pengguna
+      LEFT JOIN pengguna AS pengubah ON pengubah.id = kas.diubah_oleh_id_pengguna
       WHERE kas.dibuat_oleh_id_pengguna = :id_pengguna
     AND kas.updated_at BETWEEN :start_date AND :end_date
     ORDER BY kas.updated_at DESC";
@@ -69,6 +69,25 @@ function getHistoryKas($id_pengguna)
     $rowGetAllKas = $stmtGetAllKas->fetchAll(PDO::FETCH_ASSOC);
 
     return $rowGetAllKas ?? [];
+  } catch (PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
+  }
+}
+
+function countAnggota($id)
+{
+  include '../configs/db.php';
+
+  try {
+    $sqlCountAnggota = "SELECT COUNT(*) AS total_anggota FROM pengguna WHERE id_dkm = :id_dkm";
+    $stmtCountAnggota = $conn->prepare($sqlCountAnggota);
+    $params = [
+      ':id_dkm' => $id
+    ];
+    $stmtCountAnggota->execute($params);
+    $dataCount = $stmtCountAnggota->fetchObject()->total_anggota;
+
+    return $dataCount;
   } catch (PDOException $e) {
     echo 'ERROR: ' . $e->getMessage();
   }
