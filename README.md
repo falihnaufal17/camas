@@ -1,9 +1,11 @@
 # CAMAS
 Camas (Catat kas Masjid) merupakan aplikasi pencatatan kas berbasis web yang dikembangkan untuk mencatat pemasukan dan pengeluaran kas masjid.
 
-<img src="https://res.cloudinary.com/dlqjd3d1x/image/upload/v1705624195/Camas/ga659cgm0wg2erqvnqlb.png" width="200" />
+<div style="display:flex;column-gap:20px;justify-content:center;">
+<img align="top" src="https://res.cloudinary.com/dlqjd3d1x/image/upload/v1705624195/Camas/ga659cgm0wg2erqvnqlb.png" width="200" />
 
-<img src="https://res.cloudinary.com/dlqjd3d1x/image/upload/v1705624194/Camas/cvcce0kmhvkqtnlwvrye.png" width="200" />
+<img align="top" src="https://res.cloudinary.com/dlqjd3d1x/image/upload/v1705624194/Camas/cvcce0kmhvkqtnlwvrye.png" width="200" />
+</div>
 
 ## Prequesite
 - php version >= 5
