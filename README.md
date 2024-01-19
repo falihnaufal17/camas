@@ -10,7 +10,7 @@ Camas (Catat kas Masjid) merupakan aplikasi pencatatan kas berbasis web yang dik
 </p>
 
 ## Prequesite
-- php version >= 5
+- php version >= 7
 - mysql >= 8
 
 ## How To Run
