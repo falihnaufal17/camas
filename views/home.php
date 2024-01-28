@@ -47,7 +47,9 @@ $dataCountAnggota = countAnggota($_SESSION['profile']->id);
       <div id="carouselExampleIndicators" class="carousel slide pointer-event " data-bs-touch="true" data-bs-ride="carousel">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <?php if ($_SESSION['profile']->id_jabatan === 1) : ?>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <?php endif; ?>
         </div>
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -55,12 +57,14 @@ $dataCountAnggota = countAnggota($_SESSION['profile']->id);
             <h3>Total Kas</h3>
             <h2 class="fw-bold"><?php echo "Rp" . number_format($dataKas->total, 0, ',', '.') ?></h3>
           </div>
-          <div class="carousel-item">
-            <div class="mb-3">
-              <h2 class="mb-2 fs-4">Keanggotaan Bendahara <i class="fa-solid fa-user-group ms-1"></i></h2>
-              <h3 class="fs-3"><?= $dataCountAnggota ?> Anggota</h3>
+          <?php if ($_SESSION['profile']->id_jabatan === 1) : ?>
+            <div class="carousel-item">
+              <div class="mb-3">
+                <h2 class="mb-2 fs-4">Keanggotaan Bendahara <i class="fa-solid fa-user-group ms-1"></i></h2>
+                <h3 class="fs-3"><?= $dataCountAnggota ?> Anggota</h3>
+              </div>
             </div>
-          </div>
+          <?php endif ?>
         </div>
       </div>
     </div>
