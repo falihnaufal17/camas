@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="../assets/css/theme.css">
   <link rel="stylesheet" href="../assets/css/home.css">
   <link rel="stylesheet" href="../assets/css/welcome.css">
+  <link rel="stylesheet" href="../assets/css/member.css">
 </head>
 
 <body>
@@ -43,6 +44,14 @@
       include '../actions/delete-kas.php';
     } else if ($_GET['page'] === 'form-edit-kas-page') {
       include './form-edit-kas.php';
+    } else if ($_GET['page'] === 'form-add-member-page') {
+      include './form-add-member.php';
+    } else if ($_GET['page'] === 'members-page') {
+      include './members.php';
+    } else if ($_GET['page'] === 'form-edit-member-page') {
+      include './form-edit-member.php';
+    } else if ($_GET['page'] === 'delete-member-page') {
+      include '../actions/delete-member.php';
     } else {
       echo "<h1>404 Not Found</h1>";
     }

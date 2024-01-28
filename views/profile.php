@@ -114,7 +114,7 @@ if (isset($_POST['update-address'])) {
               <label for="jumlah_anggota" class="fw-bold">Jumlah Anggota</label>
             </div>
             <div class="col-6 text-capitalize ">
-              <?= $dataProfile->jumlah_anggota ?>
+              <?= $dataProfile->jumlah_anggota ?> <a href="index.php?page=members-page">Lihat Semua</a>
             </div>
           <?php endif; ?>
         </div>
