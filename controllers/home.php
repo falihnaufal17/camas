@@ -15,14 +15,22 @@ function getTotalKas($id_pengguna)
         ), 0)
       , 0) AS total
     FROM kas
-    WHERE dibuat_oleh_id_pengguna = :id_pengguna
+    LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
+    WHERE (
+        CASE
+          WHEN (select id_jabatan from pengguna where id = :id_pengguna) = 1
+            THEN kas.dibuat_oleh_id_pengguna IN (select id from pengguna where id_dkm = :id_pengguna) OR pengguna.id = :id_pengguna
+          ELSE kas.dibuat_oleh_id_pengguna = :id_pengguna OR pengguna.id_dkm = :id_dkm OR pengguna.id = :id_dkm
+        END
+      )
     AND tanggal BETWEEN :start_date AND :end_date";
 
     $stmtGetTotalKas = $conn->prepare($sqlGetTotalKas);
     $params = [
       ':id_pengguna' => $id_pengguna,
       ':start_date' => $startDateOfMonth,
-      ':end_date' => $currentDateOfMonth
+      ':end_date' => $currentDateOfMonth,
+      ':id_dkm' => $_SESSION['profile']->id_dkm
     ];
 
     $stmtGetTotalKas->execute($params);
@@ -53,8 +61,14 @@ function getHistoryKas($id_pengguna)
       FROM kas 
       LEFT JOIN pengguna AS pembuat ON pembuat.id = kas.dibuat_oleh_id_pengguna
       LEFT JOIN pengguna AS pengubah ON pengubah.id = kas.diubah_oleh_id_pengguna
-      WHERE kas.dibuat_oleh_id_pengguna = :id_pengguna
-    AND kas.updated_at BETWEEN :start_date AND :end_date
+      WHERE (
+        CASE
+          WHEN (select id_jabatan from pengguna where id = :id_pengguna) = 1
+            THEN kas.dibuat_oleh_id_pengguna IN (select id from pengguna where id_dkm = :id_pengguna) OR pembuat.id = :id_pengguna
+          ELSE kas.dibuat_oleh_id_pengguna = :id_pengguna OR pembuat.id_dkm = :id_dkm OR pembuat.id = :id_dkm
+        END
+      )
+    AND kas.tanggal BETWEEN :start_date AND :end_date
     ORDER BY kas.updated_at DESC";
 
     $stmtGetAllKas = $conn->prepare($sqlGetAllKas);
@@ -62,7 +76,8 @@ function getHistoryKas($id_pengguna)
     $params = [
       ':id_pengguna' => $id_pengguna,
       ':start_date' => $startDateOfMonth,
-      ':end_date' => $currentDateOfMonth
+      ':end_date' => $currentDateOfMonth,
+      ':id_dkm' => $_SESSION['profile']->id_dkm
     ];
 
     $stmtGetAllKas->execute($params);

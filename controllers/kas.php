@@ -36,12 +36,19 @@ function getTotalKasByTipe($id_pengguna)
           ), 0)
         , 0) AS total
       FROM kas
-      WHERE dibuat_oleh_id_pengguna = :id_pengguna"
+      LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
+      WHERE (
+        CASE
+          WHEN (select id_jabatan from pengguna where id = :id_pengguna) = 1
+            THEN kas.dibuat_oleh_id_pengguna IN (select id from pengguna where id_dkm = :id_pengguna) OR pengguna.id = :id_pengguna
+          ELSE kas.dibuat_oleh_id_pengguna = :id_pengguna OR pengguna.id_dkm = :id_dkm OR pengguna.id = :id_dkm
+        END
+      )"
       . $whereClause;
 
     $stmtGetTotalKas = $conn->prepare($sqlGetTotalKas);
 
-    $params = [':id_pengguna' => $id_pengguna];
+    $params = [':id_pengguna' => $id_pengguna, ':id_dkm' => $_SESSION['profile']->id_dkm];
     if (!empty($to)) {
       $params[':start_date'] = $from;
       $params[':end_date'] = $to;
@@ -95,7 +102,7 @@ function getAllKas($id_pengguna)
     $whereClause .= " AND kas.tipe IN (:pemasukan, :pengeluaran)";
   }
 
-  $orderByClause = "ORDER BY kas.created_at " . $sortDirection;
+  $orderByClause = "ORDER BY kas.tanggal " . $sortDirection;
 
   try {
     $sqlGetAllKas = "SELECT
@@ -108,12 +115,18 @@ function getAllKas($id_pengguna)
             kas.created_at
             FROM kas 
             LEFT JOIN pengguna ON pengguna.id = kas.dibuat_oleh_id_pengguna
-            WHERE kas.dibuat_oleh_id_pengguna = :id_pengguna"
+            WHERE (
+              CASE
+                WHEN (select id_jabatan from pengguna where id = :id_pengguna) = 1
+                  THEN kas.dibuat_oleh_id_pengguna IN (select id from pengguna where id_dkm = :id_pengguna) OR pengguna.id = :id_pengguna
+                ELSE kas.dibuat_oleh_id_pengguna = :id_pengguna OR pengguna.id_dkm = :id_dkm OR pengguna.id = :id_dkm
+              END
+            )"
       . $whereClause . " "
       . $orderByClause;
     $stmtGetAllKas = $conn->prepare($sqlGetAllKas);
 
-    $params = [':id_pengguna' => $id_pengguna];
+    $params = [':id_pengguna' => $id_pengguna, ':id_dkm' => $_SESSION['profile']->id_dkm];
     if (!empty($to)) {
       $params[':start_date'] = $from;
       $params[':end_date'] = $to;
