@@ -58,6 +58,11 @@ CREATE TABLE IF NOT EXISTS kas (
     FOREIGN KEY (dibuat_oleh_id_pengguna) REFERENCES pengguna(id),
     FOREIGN KEY (diubah_oleh_id_pengguna) REFERENCES pengguna(id)
 );
+
+INSERT IGNORE INTO jabatan (id, nama_jabatan)
+VALUES 
+  (1, 'DKM'),
+  (2, 'Bendahara');
 ```
 - Clone this repository
 `git clone git@github.com:falihnaufal17/camas.git`
